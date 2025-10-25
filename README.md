@@ -22,7 +22,7 @@ MoodBoost AI is a comprehensive web application that empowers users with mental 
 ![Login Page](backend/models/login.png.png)
 
 ### Homepage (version 1)  
-![Homepage](backend/models/homepage1.png.png)
+![Homepage](backend/models/homepage(1).png.png)
 
 ### Homepage (version 2)  
 ![Homepage](backend/models/homepage.png.png)
