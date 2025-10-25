@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MoodBoost AI - Login</title>
+  <style>
+    body {
+      margin: 0; min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: Arial, sans-serif;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .auth-box {
+      background: white; padding: 40px; border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2); width: 320px; text-align: center;
+    }
+    h2 { color: #667eea; margin-bottom: 24px; }
+    input { width: 100%; padding: 12px; margin-bottom: 16px;
+      border: 1px solid #ddd; border-radius: 8px; font-size: 1em; }
+    button { width: 100%; padding: 12px; background: #667eea; color: white;
+      border: none; border-radius: 8px; font-size: 1.1em; cursor: pointer; font-weight: 600; }
+    button:hover { background: #5568d3; }
+    .toggle { margin-top: 16px; color: #666; cursor: pointer; }
+    .toggle:hover { color: #667eea; text-decoration: underline; }
+    .message { margin-top: 12px; font-size: 0.95em; }
+    .error { color: red; }
+    .success { color: green; }
+  </style>
+</head>
+<body>
+  <div class="auth-box">
+    <h2 id="form-title">Login to MoodBoost AI</h2>
+    <input type="text" id="username" placeholder="Username" required />
+    <input type="password" id="password" placeholder="Password" required />
+    <button onclick="handleAuth()">Login</button>
+    <div class="toggle" onclick="toggleMode()">Don't have an account? <b>Sign up</b></div>
+    <div class="message" id="message"></div>
+  </div>
+  <script>
+    let isLogin = true;
+    function toggleMode() {
+      isLogin = !isLogin;
+      document.getElementById('form-title').textContent = isLogin ? 'Login to MoodBoost AI' : 'Sign Up for MoodBoost AI';
+      document.querySelector('button').textContent = isLogin ? 'Login' : 'Sign Up';
+      document.querySelector('.toggle').innerHTML = isLogin ? "Don't have an account? <b>Sign up</b>" : "Already have an account? <b>Login</b>";
+      document.getElementById('message').textContent = '';
+    }
+    
+    async function handleAuth() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const endpoint = isLogin ? '/login' : '/signup';
+      
+      try {
+        const res = await fetch(`http://127.0.0.1:5000${endpoint}`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          credentials: 'include',
+          body: JSON.stringify({username, password})
+        });
+        const data = await res.json();
+        
+        if(res.ok) {
+          document.getElementById('message').className = 'message success';
+          document.getElementById('message').textContent = data.message;
+          if(isLogin) setTimeout(() => window.location.href = 'index.html', 1500);
+        } else {
+          document.getElementById('message').className = 'message error';
+          document.getElementById('message').textContent = data.error;
+        }
+      } catch(e) {
+        document.getElementById('message').className = 'message error';
+        document.getElementById('message').textContent = 'Connection error!';
+      }
+    }
+  </script>
+</body>
+</html>
